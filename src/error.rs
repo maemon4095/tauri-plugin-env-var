@@ -13,7 +13,7 @@ impl std::fmt::Display for Error {
             Error::PermissionDenied(name, permission) => {
                 write!(
                     f,
-                    "Permission Denied: the permission is not enough to perform the operation. name: {}, permission: {}",
+                    "Permission Denied: The permission is insufficient to carry out the operation on the variable. variable: {}, permission: {}",
                     name, permission
                 )
             }
