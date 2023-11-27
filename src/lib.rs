@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
-    Runtime,
+    Manager, Runtime,
 };
 
 pub use env_var_scope::EnvVarScope;
@@ -42,12 +42,13 @@ fn set(scope: tauri::State<EnvVarScope>, name: &str, value: &str) -> Result<(), 
 
 pub fn init<R: Runtime>() -> TauriPlugin<R, Config> {
     Builder::new("env-var")
-        .setup_with_config(|_, config: Config| {
+        .setup_with_config(|app_handle, config: Config| {
             let scope = EnvVarScope::new();
             for (raw_pat, p) in config.scope {
                 let pat = Pattern::new(&raw_pat)?;
                 scope.allow(pat, p);
             }
+            app_handle.manage(scope);
             Ok(())
         })
         .invoke_handler(generate_handler![get, set])
