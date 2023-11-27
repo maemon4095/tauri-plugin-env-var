@@ -1,13 +1,13 @@
 use std::sync::{RwLock, RwLockReadGuard};
 
-use regex::Regex;
+use glob::Pattern;
 
 use crate::Permission;
 
 #[derive(Debug)]
 pub struct EnvVarScope {
-    allowed_patterns: RwLock<Vec<(Regex, Permission)>>,
-    forbidden_patterns: RwLock<Vec<(Regex, Permission)>>,
+    allowed_patterns: RwLock<Vec<(Pattern, Permission)>>,
+    forbidden_patterns: RwLock<Vec<(Pattern, Permission)>>,
 }
 
 impl EnvVarScope {
@@ -18,19 +18,19 @@ impl EnvVarScope {
         }
     }
 
-    pub fn allowed_patterns(&self) -> RwLockReadGuard<'_, Vec<(Regex, Permission)>> {
+    pub fn allowed_patterns(&self) -> RwLockReadGuard<'_, Vec<(Pattern, Permission)>> {
         self.allowed_patterns.read().unwrap()
     }
-    pub fn forbidden_patterns(&self) -> RwLockReadGuard<'_, Vec<(Regex, Permission)>> {
+    pub fn forbidden_patterns(&self) -> RwLockReadGuard<'_, Vec<(Pattern, Permission)>> {
         self.forbidden_patterns.read().unwrap()
     }
 
-    pub fn allow(&self, pattern: Regex, permission: Permission) {
+    pub fn allow(&self, pattern: Pattern, permission: Permission) {
         let mut pats = self.allowed_patterns.write().unwrap();
         pats.push((pattern, permission));
     }
 
-    pub fn forbid(&self, pattern: Regex, permission: Permission) {
+    pub fn forbid(&self, pattern: Pattern, permission: Permission) {
         let mut pats = self.forbidden_patterns.write().unwrap();
         pats.push((pattern, permission));
     }
@@ -41,7 +41,7 @@ impl EnvVarScope {
 
         let mut permission = Permission::None;
         for (pat, p) in allowed.iter() {
-            if !pat.is_match(name) {
+            if !pat.matches(name) {
                 continue;
             }
             permission = p.union(permission);
@@ -51,7 +51,7 @@ impl EnvVarScope {
         }
 
         for (pat, p) in forbidden.iter() {
-            if !pat.is_match(name) {
+            if !pat.matches(name) {
                 continue;
             }
             permission = p.intersect(permission);

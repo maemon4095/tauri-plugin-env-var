@@ -7,7 +7,7 @@
       "scopes": {
         "HOME": "read",
         "PATH": "read",
-        "TAURI_.*": "all"
+        "TAURI_*": "all"
       }
     }
   }

@@ -3,7 +3,7 @@ mod error;
 mod permission;
 
 use error::Error;
-use regex::Regex;
+use glob::Pattern;
 use std::collections::HashMap;
 use tauri::{
     generate_handler,
@@ -44,7 +44,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R, Config> {
         .setup_with_config(|_, config: Config| {
             let scope = EnvVarScope::new();
             for (raw_pat, p) in config.scope {
-                let pat = Regex::new(&raw_pat)?;
+                let pat = Pattern::new(&raw_pat)?;
                 scope.allow(pat, p);
             }
             Ok(())
