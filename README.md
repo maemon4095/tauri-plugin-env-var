@@ -4,7 +4,7 @@
 {   
   "plugins": {
     "env-var": {
-      "scopes": {
+      "scope": {
         "HOME": "read",
         "PATH": "read",
         "TAURI_*": "all"
