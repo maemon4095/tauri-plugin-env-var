@@ -30,10 +30,11 @@ fn get(scope: tauri::State<EnvVarScope>, name: &str) -> Result<String, Error> {
 }
 
 #[tauri::command]
-fn set(scope: tauri::State<EnvVarScope>, name: &str) -> Result<String, Error> {
+fn set(scope: tauri::State<EnvVarScope>, name: &str, value: &str) -> Result<(), Error> {
     let permission = scope.get_permission(name);
     if permission.can_write() {
-        Ok(std::env::var(name)?)
+        std::env::set_var(name, value);
+        Ok(())
     } else {
         Err(Error::PermissionDenied(name.to_string(), permission))
     }
