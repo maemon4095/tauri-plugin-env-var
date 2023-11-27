@@ -44,7 +44,7 @@ impl EnvVarScope {
             if !pat.matches(name) {
                 continue;
             }
-            permission = p.union(permission);
+            permission = p.allow(permission);
             if permission.is_all() {
                 break;
             }
@@ -54,7 +54,7 @@ impl EnvVarScope {
             if !pat.matches(name) {
                 continue;
             }
-            permission = p.intersect(permission);
+            permission = p.revoke(permission);
             if permission.is_none() {
                 break;
             }
