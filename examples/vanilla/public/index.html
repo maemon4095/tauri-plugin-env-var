@@ -161,6 +161,7 @@
     onChangeOperation();
 
     function updateVariableFieldHeight() {
+      variable_field_elem.attributeStyleMap.delete("height");
       variable_field_elem.style.height = `calc(${variable_field_elem.scrollHeight}px + 1em)`;
     }
 
