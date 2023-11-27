@@ -9,6 +9,6 @@ export async function getPermission(name: string) {
 }
 
 export async function set(name: string, value: string) {
-    await invoke("plugin:env-var|get", { name, value });
+    await invoke("plugin:env-var|set", { name, value });
 }
 
