@@ -1,4 +1,4 @@
-#[derive(Debug, serde::Deserialize, Clone, Copy)]
+#[derive(Debug, serde::Deserialize, serde::Serialize, Clone, Copy)]
 #[serde(rename_all = "camelCase")]
 pub enum Permission {
     None,

@@ -40,6 +40,11 @@ fn set(scope: tauri::State<EnvVarScope>, name: &str, value: &str) -> Result<(), 
     }
 }
 
+#[tauri::command]
+fn get_permission(scope: tauri::State<EnvVarScope>, name: &str) -> Permission {
+    scope.get_permission(name)
+}
+
 pub fn init<R: Runtime>() -> TauriPlugin<R, Config> {
     Builder::new("env-var")
         .setup_with_config(|app_handle, config: Config| {
@@ -51,6 +56,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R, Config> {
             app_handle.manage(scope);
             Ok(())
         })
-        .invoke_handler(generate_handler![get, set])
+        .invoke_handler(generate_handler![get, set, get_permission])
         .build()
 }
